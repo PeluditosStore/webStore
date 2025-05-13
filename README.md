@@ -1,2 +1,1 @@
-# webStore
-Tienda Online para mascotas
+# peluditos-store
