@@ -1,0 +1,114 @@
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { ShoppingCart, PhoneCall, PawPrint, X } from "lucide-react";
+
+export default function PeluditosStore() {
+  const products = [
+    {
+      id: 1,
+      name: "Cama para perros XL",
+      price: 129.0,
+      image: "/products/cama.jpg",
+    },
+    {
+      id: 2,
+      name: "Snack natural para gatos",
+      price: 19.9,
+      image: "/products/snack.jpg",
+    },
+    {
+      id: 3,
+      name: "Correa antitirones",
+      price: 34.5,
+      image: "/products/correa.jpg",
+    },
+  ];
+
+  const [cart, setCart] = useState([]);
+  const [showCart, setShowCart] = useState(false);
+
+  const addToCart = (product) => {
+    setCart((prev) => [...prev, product]);
+  };
+
+  const removeFromCart = (id) => {
+    setCart((prev) => prev.filter((item, idx) => idx !== id));
+  };
+
+  const total = cart.reduce((acc, item) => acc + item.price, 0);
+
+  return (
+    <div className="min-h-screen bg-white text-gray-800 p-6">
+      <header className="flex justify-between items-center mb-10">
+        <div className="flex items-center gap-2">
+          <PawPrint className="text-orange-400 w-8 h-8" />
+          <h1 className="text-2xl font-bold text-blue-400">Peluditos Store</h1>
+        </div>
+        <div className="flex gap-3">
+          <Button variant="outline" onClick={() => setShowCart(!showCart)}>
+            <ShoppingCart className="w-4 h-4 mr-2" /> Carrito ({cart.length})
+          </Button>
+          <Button variant="outline">
+            <PhoneCall className="w-4 h-4 mr-2" /> WhatsApp
+          </Button>
+        </div>
+      </header>
+
+      {showCart && (
+        <div className="bg-gray-100 p-4 mb-6 rounded-xl shadow-inner">
+          <h2 className="text-xl font-bold mb-4">🛒 Tu Carrito</h2>
+          {cart.length === 0 ? (
+            <p className="text-gray-500">Tu carrito está vacío.</p>
+          ) : (
+            <ul className="space-y-2">
+              {cart.map((item, idx) => (
+                <li key={idx} className="flex justify-between items-center">
+                  <span>{item.name}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold">S/ {item.price.toFixed(2)}</span>
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      onClick={() => removeFromCart(idx)}
+                    >
+                      <X className="w-3 h-3" />
+                    </Button>
+                  </div>
+                </li>
+              ))}
+              <li className="flex justify-between pt-2 border-t mt-2">
+                <strong>Total:</strong>
+                <strong>S/ {total.toFixed(2)}</strong>
+              </li>
+              <li className="text-right mt-2">
+                <Button className="bg-green-500 hover:bg-green-600 text-white">
+                  Proceder al pago
+                </Button>
+              </li>
+            </ul>
+          )}
+        </div>
+      )}
+
+      <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {products.map((product) => (
+          <Card key={product.id} className="rounded-2xl shadow-md">
+            <img
+              src={product.image}
+              alt={product.name}
+              className="w-full h-48 object-cover rounded-t-2xl"
+            />
+            <CardContent className="p-4">
+              <h2 className="text-lg font-semibold">{product.name}</h2>
+              <p className="text-orange-500 font-bold">S/ {product.price.toFixed(2)}</p>
+              <Button className="mt-2 w-full" onClick={() => addToCart(product)}>
+                <ShoppingCart className="w-4 h-4 mr-2" /> Añadir al carrito
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
+      </section>
+    </div>
+  );
+}
